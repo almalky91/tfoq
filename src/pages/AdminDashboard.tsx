@@ -64,4 +64,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default Index;
+export default AdminDashboard;
