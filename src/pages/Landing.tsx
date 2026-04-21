@@ -3,6 +3,7 @@ import { ArrowLeft, Sparkles, Trophy, Users, BookOpen, Gauge, ShieldCheck, Award
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Button } from "@/components/ui/button";
+import { useSiteContent } from "@/hooks/useSiteContent";
 import heroImg from "@/assets/hero-students.jpg";
 
 const features = [
@@ -12,14 +13,30 @@ const features = [
   { icon: Users, title: "حساب ولي الأمر", desc: "تابع/ي أداء الطالبة، نقاطها وترتيبها بشكل مستمر ومفصّل", tone: "success" },
 ];
 
-const stats = [
-  { v: "1,200+", l: "طالبة مسجلة" },
-  { v: "5,000+", l: "سؤال تفاعلي" },
-  { v: "60+", l: "معلمة" },
-  { v: "98%", l: "رضا الطالبات" },
-];
+const heroDefaults = {
+  badge: "منصة تعليمية معتمدة لطالبات الثانوية",
+  title_line1: "تفوّقي في",
+  title_line2: "التحصيلي والقدرات",
+  description: "منصة تفاعلية متكاملة تساعدك على إتقان مهارات اختبارَي التحصيلي والقدرات عبر عجلة أسئلة ذكية، نظام نقاط، ولوحة ترتيب محفّزة.",
+  cta_primary: "ابدئي رحلتك الآن",
+  cta_secondary: "استكشفي المميزات",
+  stats: [
+    { v: "1,200+", l: "طالبة مسجلة" },
+    { v: "5,000+", l: "سؤال تفاعلي" },
+    { v: "60+", l: "معلمة" },
+    { v: "98%", l: "رضا الطالبات" },
+  ],
+};
+
+const featuresDefaults = {
+  eyebrow: "مميزات المنصة",
+  title: "كل ما تحتاجينه للتفوّق في مكان واحد",
+  subtitle: "أدوات تعليمية حديثة مصممة خصيصاً لطالبات المرحلة الثانوية",
+};
 
 const Landing = () => {
+  const { content: hero } = useSiteContent("hero", heroDefaults);
+  const { content: feat } = useSiteContent("features_section", featuresDefaults);
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SiteNav />
@@ -39,31 +56,31 @@ const Landing = () => {
           <div className="animate-slide-in order-1 lg:order-2">
             <div className="inline-flex items-center gap-2 bg-accent/15 text-accent-foreground px-4 py-2 rounded-full text-sm font-bold mb-6">
               <Sparkles className="w-4 h-4" />
-              منصة تعليمية معتمدة لطالبات الثانوية
+              {hero.badge}
             </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight text-balance">
-              تفوّقي في
-              <span className="block bg-gradient-primary bg-clip-text text-transparent mt-2">التحصيلي والقدرات</span>
+              {hero.title_line1}
+              <span className="block bg-gradient-primary bg-clip-text text-transparent mt-2">{hero.title_line2}</span>
             </h1>
             <p className="text-lg text-muted-foreground mt-6 leading-relaxed max-w-xl">
-              منصة تفاعلية متكاملة تساعدك على إتقان مهارات اختبارَي التحصيلي والقدرات عبر عجلة أسئلة ذكية، نظام نقاط، ولوحة ترتيب محفّزة.
+              {hero.description}
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Link to="/auth?mode=signup">
                 <Button size="lg" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-elegant gap-2 h-14 px-8 text-base">
-                  ابدئي رحلتك الآن
+                  {hero.cta_primary}
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
               <a href="#features">
                 <Button size="lg" variant="outline" className="h-14 px-8 text-base border-2">
-                  استكشفي المميزات
+                  {hero.cta_secondary}
                 </Button>
               </a>
             </div>
 
             <div className="mt-10 grid grid-cols-4 gap-4">
-              {stats.map((s) => (
+              {(hero.stats ?? []).map((s: any) => (
                 <div key={s.l} className="text-center">
                   <p className="font-display text-2xl md:text-3xl font-extrabold bg-gradient-primary bg-clip-text text-transparent">{s.v}</p>
                   <p className="text-xs text-muted-foreground mt-1">{s.l}</p>
@@ -78,11 +95,11 @@ const Landing = () => {
       <section id="features" className="py-20 bg-card">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-sm font-bold text-primary uppercase tracking-wider">مميزات المنصة</span>
+            <span className="text-sm font-bold text-primary uppercase tracking-wider">{feat.eyebrow}</span>
             <h2 className="font-display text-3xl md:text-4xl font-extrabold text-foreground mt-3">
-              كل ما تحتاجينه للتفوّق في مكان واحد
+              {feat.title}
             </h2>
-            <p className="text-muted-foreground mt-4">أدوات تعليمية حديثة مصممة خصيصاً لطالبات المرحلة الثانوية</p>
+            <p className="text-muted-foreground mt-4">{feat.subtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
