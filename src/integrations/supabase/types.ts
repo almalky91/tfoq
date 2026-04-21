@@ -43,6 +43,7 @@ export type Database = {
           full_name: string
           grade: string | null
           id: string
+          is_active: boolean
           phone: string | null
           total_points: number
           updated_at: string
@@ -54,6 +55,7 @@ export type Database = {
           full_name: string
           grade?: string | null
           id: string
+          is_active?: boolean
           phone?: string | null
           total_points?: number
           updated_at?: string
@@ -65,6 +67,7 @@ export type Database = {
           full_name?: string
           grade?: string | null
           id?: string
+          is_active?: boolean
           phone?: string | null
           total_points?: number
           updated_at?: string
@@ -167,6 +170,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      site_content: {
+        Row: {
+          content: Json
+          id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json
+          id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json
+          id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
       }
       subjects: {
         Row: {
