@@ -117,7 +117,7 @@ const Landing = () => {
             </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black text-foreground leading-tight text-balance">
               {hero.title_line1}
-              <span className="block text-gradient-primary mt-2">
+              <span className="block mt-2 font-display" style={gradientStyle}>
                 {hero.title_line2}
               </span>
             </h1>
