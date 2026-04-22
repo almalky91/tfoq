@@ -74,6 +74,16 @@ const Landing = () => {
 
   const heroImage = hero.image_url && hero.image_url.length > 0 ? hero.image_url : heroImg;
 
+  // Safe gradient style — applied inline so admin colors render reliably on mobile WebKit
+  const gradientStyle: React.CSSProperties = {
+    backgroundImage: `linear-gradient(${hero.gradient_angle ?? 135}deg, ${hero.gradient_from ?? "#006B3A"}, ${hero.gradient_to ?? "#1F8B5C"})`,
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    color: "transparent",
+  };
+
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SiteNav />
