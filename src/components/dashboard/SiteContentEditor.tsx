@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Save, Loader2, Layout, FileText, Plus, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Save, Loader2, Layout, FileText, Upload, Image as ImageIcon, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
 
 type Section = { id: string; content: any };
 
