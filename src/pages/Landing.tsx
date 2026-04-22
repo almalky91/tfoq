@@ -23,6 +23,9 @@ const heroDefaults = {
   cta_primary: "ابدئي رحلتك الآن",
   cta_secondary: "استكشفي المميزات",
   image_url: "",
+  gradient_from: "#006B3A",
+  gradient_to: "#1F8B5C",
+  gradient_angle: 135,
   stats: [
     { v: "1,200+", l: "طالبة مسجلة" },
     { v: "5,000+", l: "سؤال تفاعلي" },
