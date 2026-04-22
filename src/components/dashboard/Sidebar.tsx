@@ -108,10 +108,8 @@ export const MobileSidebar = ({ active, onChange, open, onOpenChange }: MobileSi
         </button>
       </SheetTrigger>
       <SheetContent side="right" className="p-0 w-80 max-w-[85vw] border-sidebar-border">
-        <VisuallyHidden>
-          <SheetTitle>القائمة الرئيسية</SheetTitle>
-          <SheetDescription>تنقل بين أقسام لوحة التحكم</SheetDescription>
-        </VisuallyHidden>
+        <SheetTitle className="sr-only">القائمة الرئيسية</SheetTitle>
+        <SheetDescription className="sr-only">تنقل بين أقسام لوحة التحكم</SheetDescription>
         <SidebarInner
           active={active}
           onChange={(id) => {
