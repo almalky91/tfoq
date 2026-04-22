@@ -219,6 +219,38 @@ export type Database = {
         }
         Relationships: []
       }
+      teacher_subjects: {
+        Row: {
+          assigned_by: string | null
+          created_at: string
+          id: string
+          subject_id: string
+          teacher_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          subject_id: string
+          teacher_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string
+          id?: string
+          subject_id?: string
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_subjects_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -250,6 +282,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      teacher_has_subject: {
+        Args: { _subject_id: string; _teacher_id: string }
         Returns: boolean
       }
     }
