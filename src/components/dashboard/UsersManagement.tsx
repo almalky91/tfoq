@@ -82,7 +82,7 @@ export const UsersManagement = ({ filterRole }: { filterRole?: string }) => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-[760px]">
           <thead className="bg-muted/40 text-right">
             <tr>
               <th className="p-4 font-bold">الاسم</th>
