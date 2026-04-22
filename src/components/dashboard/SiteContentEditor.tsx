@@ -80,6 +80,46 @@ export const SiteContentEditor = () => {
         </TabsList>
 
         <TabsContent value="hero" className="space-y-4">
+          {/* Hero image upload */}
+          <div className="rounded-xl border border-border bg-muted/30 p-4 space-y-3">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-primary" />
+                <Label className="font-bold m-0">صورة الهيرو</Label>
+                <span className="text-xs text-muted-foreground">(الحد الأقصى 2 ميغابايت — JPG / PNG / WEBP)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) handleHeroImageUpload(f); e.currentTarget.value = ""; }}
+                />
+                <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading} className="gap-2">
+                  {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  {uploading ? "جارٍ الرفع..." : "رفع صورة"}
+                </Button>
+                {hero.image_url && (
+                  <Button type="button" variant="ghost" size="sm" onClick={() => update("hero", { image_url: "" })} className="gap-2 text-destructive hover:text-destructive">
+                    <X className="w-4 h-4" />إزالة
+                  </Button>
+                )}
+              </div>
+            </div>
+            {hero.image_url && (
+              <div className="rounded-lg overflow-hidden border border-border bg-card">
+                <img src={hero.image_url} alt="معاينة صورة الهيرو" className="w-full max-h-64 object-cover" />
+              </div>
+            )}
+            <Input
+              value={hero.image_url ?? ""}
+              onChange={(e) => update("hero", { image_url: e.target.value })}
+              placeholder="أو ألصقي رابط صورة مباشرًا"
+              dir="ltr"
+            />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="الشارة العلوية" value={hero.badge} onChange={(v) => update("hero", { badge: v })} />
             <Field label="السطر الأول من العنوان" value={hero.title_line1} onChange={(v) => update("hero", { title_line1: v })} />
