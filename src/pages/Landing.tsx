@@ -168,11 +168,11 @@ const Landing = () => {
       <section id="features" className="py-14 sm:py-16 md:py-20 bg-card">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 md:mb-14">
-            <span className="text-xs sm:text-sm font-bold text-primary uppercase tracking-wider">{feat.eyebrow}</span>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mt-2 sm:mt-3">
+            <span className="t-eyebrow text-primary">{feat.eyebrow}</span>
+            <h2 className="t-h1 text-foreground mt-2 sm:mt-3">
               {feat.title}
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4">{feat.subtitle}</p>
+            <p className="t-body text-muted-foreground mt-3 sm:mt-4">{feat.subtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
