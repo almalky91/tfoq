@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Sparkles, Trophy, Users, BookOpen, Gauge, ShieldCheck, Award, Target } from "lucide-react";
+import { ArrowLeft, Sparkles, Trophy, Users, BookOpen, Gauge, ShieldCheck, Award, Target, Compass, Eye } from "lucide-react";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -40,9 +40,18 @@ const featuresDefaults = {
   subtitle: "أدوات تعليمية حديثة مصممة خصيصاً لطالبات المرحلة الثانوية",
 };
 
+const aboutDefaults = {
+  eyebrow: "من نحن",
+  title: "منصة تفوّق التعليمية",
+  body: "منصة تفوّق هي منصة تعليمية تفاعلية مخصصة لطالبات الثانوية الرابعة بصبيا، تهدف إلى تعزيز مهارات الطالبات في اختبارات التحصيلي والقدرات.",
+  mission: "تمكين الطالبات من تحقيق أعلى الدرجات في اختبارات القياس عبر أدوات تعليمية حديثة.",
+  vision: "أن نكون المنصة الأولى في تأهيل طالبات الثانوية لاختبارات التحصيلي والقدرات.",
+};
+
 const Landing = () => {
   const { content: hero } = useSiteContent("hero", heroDefaults);
   const { content: feat } = useSiteContent("features_section", featuresDefaults);
+  const { content: about } = useSiteContent("about", aboutDefaults);
   const [liveStats, setLiveStats] = useState<{ v: string; l: string }[] | null>(null);
 
   // Fetch real counts as a guaranteed fallback so stats are NEVER empty
