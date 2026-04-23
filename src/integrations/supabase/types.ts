@@ -556,7 +556,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      leaderboard: {
+        Row: {
+          avatar_url: string | null
+          full_name: string | null
+          grade: string | null
+          id: string | null
+          total_points: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          full_name?: string | null
+          grade?: string | null
+          id?: string | null
+          total_points?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          full_name?: string | null
+          grade?: string | null
+          id?: string | null
+          total_points?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       can_access_content: {
