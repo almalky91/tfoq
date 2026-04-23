@@ -151,31 +151,12 @@ const Leaderboard = () => {
                         )}
                       </div>
 
-                      <p className="font-bold text-sm truncate px-1">{p.full_name}</p>
+                      <p className="font-bold text-sm truncate px-1 mt-1">{p.full_name}</p>
                       <div className="flex items-center justify-center gap-1 mt-1">
                         <Star className="w-3.5 h-3.5 text-accent fill-accent" />
                         <p className="text-sm font-display font-extrabold text-primary tabular-nums">
                           {(animatedPoints[dataIdx] ?? 0).toLocaleString("ar-EG")}
                         </p>
-                      </div>
-
-                      {/* Podium pillar */}
-                      <div
-                        className={`${heights[realIdx]} mt-3 rounded-t-2xl bg-gradient-to-b ${podiumGradients[realIdx]} flex flex-col items-center justify-start pt-3 shadow-elegant relative overflow-hidden group`}
-                      >
-                        {/* Shine effect */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent opacity-50" />
-                        <div className="absolute -top-10 -left-10 w-20 h-20 bg-white/20 rounded-full blur-xl" />
-                        <span className="relative font-display text-4xl font-black text-white drop-shadow-md">
-                          #{realIdx + 1}
-                        </span>
-                        {realIdx === 0 && (
-                          <div className="relative mt-2 flex gap-0.5">
-                            {[...Array(3)].map((_, s) => (
-                              <Sparkles key={s} className="w-3 h-3 text-white/80 animate-pulse" style={{ animationDelay: `${s * 0.2}s` }} />
-                            ))}
-                          </div>
-                        )}
                       </div>
                     </div>
                   );
