@@ -193,8 +193,8 @@ const Landing = () => {
                   <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${toneCls[f.tone]} flex items-center justify-center mb-4 sm:mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                     <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
                   </div>
-                  <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-1.5 sm:mb-2">{f.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                  <h3 className="t-h4 text-foreground mb-1.5 sm:mb-2">{f.title}</h3>
+                  <p className="t-small text-muted-foreground">{f.desc}</p>
                 </div>
               );
             })}
