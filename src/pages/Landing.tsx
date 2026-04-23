@@ -102,13 +102,13 @@ const Landing = () => {
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               {hero.badge}
             </div>
-            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-6xl font-black text-foreground leading-[1.15] text-balance">
+            <h1 className="t-display text-foreground text-balance">
               {hero.title_line1}
               <span className="block mt-1.5 sm:mt-2 font-display" style={gradientStyle}>
                 {hero.title_line2}
               </span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-4 sm:mt-5 leading-relaxed max-w-xl mx-auto lg:mx-0">
+            <p className="t-lead text-muted-foreground mt-4 sm:mt-5 max-w-xl mx-auto lg:mx-0">
               {hero.description}
             </p>
             <div className="flex flex-wrap justify-center lg:justify-start gap-2.5 sm:gap-3 mt-6 sm:mt-7">
