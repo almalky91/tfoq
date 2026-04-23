@@ -206,8 +206,8 @@ const Landing = () => {
       <section className="py-14 sm:py-16 md:py-20 bg-gradient-soft">
         <div className="container">
           <div className="text-center mb-10 sm:mb-12 md:mb-14">
-            <span className="text-xs sm:text-sm font-bold text-primary uppercase tracking-wider">رحلتك في 3 خطوات</span>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mt-2 sm:mt-3">كيف تعمل المنصة؟</h2>
+            <span className="t-eyebrow text-primary">رحلتك في 3 خطوات</span>
+            <h2 className="t-h1 text-foreground mt-2 sm:mt-3">كيف تعمل المنصة؟</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
             {[
