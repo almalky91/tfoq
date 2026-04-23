@@ -226,8 +226,8 @@ const Landing = () => {
                     {step.n}
                   </div>
                   <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mt-3 sm:mt-4 mb-3 sm:mb-4" />
-                  <h3 className="font-display text-lg sm:text-xl font-bold mb-1.5 sm:mb-2">{step.t}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{step.d}</p>
+                  <h3 className="t-h3 mb-1.5 sm:mb-2">{step.t}</h3>
+                  <p className="t-small text-muted-foreground">{step.d}</p>
                 </div>
               );
             })}
