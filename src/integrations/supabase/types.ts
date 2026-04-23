@@ -556,30 +556,7 @@ export type Database = {
       }
     }
     Views: {
-      leaderboard: {
-        Row: {
-          avatar_url: string | null
-          full_name: string | null
-          grade: string | null
-          id: string | null
-          total_points: number | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          full_name?: string | null
-          grade?: string | null
-          id?: string | null
-          total_points?: number | null
-        }
-        Update: {
-          avatar_url?: string | null
-          full_name?: string | null
-          grade?: string | null
-          id?: string | null
-          total_points?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       can_access_content: {
@@ -590,6 +567,16 @@ export type Database = {
           _visibility: Database["public"]["Enums"]["content_visibility"]
         }
         Returns: boolean
+      }
+      get_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          grade: string
+          id: string
+          total_points: number
+        }[]
       }
       has_role: {
         Args: {
