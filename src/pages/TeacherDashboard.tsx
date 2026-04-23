@@ -171,8 +171,8 @@ const TeacherDashboard = () => {
       <div className="container py-10">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="font-display text-3xl font-extrabold">لوحة المعلمة</h1>
-            <p className="text-muted-foreground mt-2">إدارة الأسئلة ومتابعة نتائج الطالبات في أقسامكِ</p>
+            <h1 className="t-h1">لوحة المعلمة</h1>
+            <p className="t-body text-muted-foreground mt-2">إدارة الأسئلة ومتابعة نتائج الطالبات في أقسامكِ</p>
           </div>
           {!noAssignments && (
             <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) { setEditing(null); setForm(blank); } }}>

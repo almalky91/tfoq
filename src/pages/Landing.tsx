@@ -102,13 +102,13 @@ const Landing = () => {
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               {hero.badge}
             </div>
-            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-6xl font-black text-foreground leading-[1.15] text-balance">
+            <h1 className="t-display text-foreground text-balance">
               {hero.title_line1}
               <span className="block mt-1.5 sm:mt-2 font-display" style={gradientStyle}>
                 {hero.title_line2}
               </span>
             </h1>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-4 sm:mt-5 leading-relaxed max-w-xl mx-auto lg:mx-0">
+            <p className="t-lead text-muted-foreground mt-4 sm:mt-5 max-w-xl mx-auto lg:mx-0">
               {hero.description}
             </p>
             <div className="flex flex-wrap justify-center lg:justify-start gap-2.5 sm:gap-3 mt-6 sm:mt-7">
@@ -152,10 +152,10 @@ const Landing = () => {
                 className="group relative overflow-hidden rounded-xl sm:rounded-2xl border border-border bg-card p-3.5 sm:p-5 md:p-6 shadow-card hover:shadow-elegant hover:-translate-y-1 transition-all duration-300 animate-rise text-center"
               >
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-primary opacity-70" />
-                <p className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold leading-none" style={gradientStyle}>
+                <p className="t-stat" style={gradientStyle}>
                   {s.v}
                 </p>
-                <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground font-medium mt-1.5 sm:mt-2">
+                <p className="t-stat-label text-muted-foreground mt-1.5 sm:mt-2">
                   {s.l}
                 </p>
               </div>
@@ -168,11 +168,11 @@ const Landing = () => {
       <section id="features" className="py-14 sm:py-16 md:py-20 bg-card">
         <div className="container">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 md:mb-14">
-            <span className="text-xs sm:text-sm font-bold text-primary uppercase tracking-wider">{feat.eyebrow}</span>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mt-2 sm:mt-3">
+            <span className="t-eyebrow text-primary">{feat.eyebrow}</span>
+            <h2 className="t-h1 text-foreground mt-2 sm:mt-3">
               {feat.title}
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mt-3 sm:mt-4">{feat.subtitle}</p>
+            <p className="t-body text-muted-foreground mt-3 sm:mt-4">{feat.subtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
@@ -193,8 +193,8 @@ const Landing = () => {
                   <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl ${toneCls[f.tone]} flex items-center justify-center mb-4 sm:mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3`}>
                     <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
                   </div>
-                  <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-1.5 sm:mb-2">{f.title}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                  <h3 className="t-h4 text-foreground mb-1.5 sm:mb-2">{f.title}</h3>
+                  <p className="t-small text-muted-foreground">{f.desc}</p>
                 </div>
               );
             })}
@@ -206,8 +206,8 @@ const Landing = () => {
       <section className="py-14 sm:py-16 md:py-20 bg-gradient-soft">
         <div className="container">
           <div className="text-center mb-10 sm:mb-12 md:mb-14">
-            <span className="text-xs sm:text-sm font-bold text-primary uppercase tracking-wider">رحلتك في 3 خطوات</span>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-foreground mt-2 sm:mt-3">كيف تعمل المنصة؟</h2>
+            <span className="t-eyebrow text-primary">رحلتك في 3 خطوات</span>
+            <h2 className="t-h1 text-foreground mt-2 sm:mt-3">كيف تعمل المنصة؟</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
             {[
@@ -226,8 +226,8 @@ const Landing = () => {
                     {step.n}
                   </div>
                   <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-primary mx-auto mt-3 sm:mt-4 mb-3 sm:mb-4" />
-                  <h3 className="font-display text-lg sm:text-xl font-bold mb-1.5 sm:mb-2">{step.t}</h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{step.d}</p>
+                  <h3 className="t-h3 mb-1.5 sm:mb-2">{step.t}</h3>
+                  <p className="t-small text-muted-foreground">{step.d}</p>
                 </div>
               );
             })}
@@ -241,10 +241,10 @@ const Landing = () => {
           <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-primary p-7 sm:p-10 lg:p-16 text-center shadow-elegant animate-rise">
             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 80%, white 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
             <div className="relative">
-              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary-foreground">
+              <h2 className="t-h1 text-primary-foreground">
                 مستعدة لتحقيق أعلى الدرجات؟
               </h2>
-              <p className="text-sm sm:text-base text-primary-foreground/85 mt-3 sm:mt-4 max-w-xl mx-auto">
+              <p className="t-body text-primary-foreground/85 mt-3 sm:mt-4 max-w-xl mx-auto">
                 انضمي اليوم إلى مئات الطالبات اللواتي يحضّرن لاختباراتهن بثقة عبر منصة تفوّق
               </p>
               <Link to="/auth?mode=signup">

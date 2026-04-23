@@ -36,9 +36,9 @@ export const StatCard = ({ label, value, icon: Icon, change, hint, tone = "prima
         )}
       </div>
       <div className="mt-5">
-        <p className="text-sm text-muted-foreground font-medium">{label}</p>
-        <p className="font-display text-3xl lg:text-4xl font-extrabold text-foreground mt-1.5">{value}</p>
-        {hint && <p className="text-xs text-muted-foreground mt-2">{hint}</p>}
+        <p className="t-small text-muted-foreground font-medium">{label}</p>
+        <p className="t-stat text-foreground mt-1.5">{value}</p>
+        {hint && <p className="t-small text-muted-foreground mt-2">{hint}</p>}
       </div>
     </div>
   );

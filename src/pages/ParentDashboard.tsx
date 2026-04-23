@@ -52,8 +52,8 @@ const ParentDashboard = () => {
       <div className="container py-10">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-display text-3xl font-extrabold">لوحة ولي الأمر</h1>
-            <p className="text-muted-foreground mt-2">تابع/ي أداء أبنائك في المنصة</p>
+            <h1 className="t-h1">لوحة ولي الأمر</h1>
+            <p className="t-body text-muted-foreground mt-2">تابع/ي أداء أبنائك في المنصة</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
