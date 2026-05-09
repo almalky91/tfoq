@@ -43,6 +43,7 @@ const AdminLiveMonitor = () => {
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshMs, setRefreshMs] = useState<number>(REFRESH_ACTIVE_MS);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
