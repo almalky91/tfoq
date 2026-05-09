@@ -257,7 +257,7 @@ const AdminLiveMonitor = () => {
         <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
           <div className="px-5 py-3 border-b border-border bg-secondary/30 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
-            <span className="font-bold text-sm">آخر 20 إجابة</span>
+            <span className="font-bold text-sm">آخر {RECENT_LIMIT} إجابات</span>
           </div>
           {recent.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground text-sm">لا توجد إجابات حديثة</div>
