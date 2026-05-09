@@ -25,7 +25,10 @@ type Stats = {
   avgPointsPerAttempt: number;
 };
 
-const REFRESH_MS = 15000; // تحديث كل 15 ثانية (تقليل bandwidth بـ 66%)
+// تحديث تكيّفي: سريع وقت النشاط، بطيء وقت الهدوء (توفير bandwidth)
+const REFRESH_ACTIVE_MS = 15000;   // 15ث عند وجود طالبات نشطات
+const REFRESH_LOW_MS = 45000;      // 45ث عند نشاط خفيف (<10 طالبات)
+const REFRESH_IDLE_MS = 120000;    // دقيقتان عند الهدوء التام
 const RECENT_LIMIT = 10;
 
 const HEALTH_THRESHOLDS = {
@@ -40,6 +43,7 @@ const AdminLiveMonitor = () => {
   const [recent, setRecent] = useState<RecentAttempt[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [refreshMs, setRefreshMs] = useState<number>(REFRESH_ACTIVE_MS);
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
@@ -129,11 +133,25 @@ const AdminLiveMonitor = () => {
       }
     };
 
-    load();
-    const t = setInterval(load, REFRESH_MS);
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const tick = async () => {
+      await load();
+      if (cancelled) return;
+      // اختيار الفترة بناءً على عدد الطالبات النشطات (يتحدث داخل load عبر setStats)
+      // نقرأ من state الحالي عبر functional update لاحقاً، هنا نستعمل حيلة عبر setStats
+      setStats((s) => {
+        const active = s?.activeStudents ?? 0;
+        const next =
+          active === 0 ? REFRESH_IDLE_MS : active < 10 ? REFRESH_LOW_MS : REFRESH_ACTIVE_MS;
+        setRefreshMs(next);
+        timer = setTimeout(tick, next);
+        return s;
+      });
+    };
+    tick();
     return () => {
       cancelled = true;
-      clearInterval(t);
+      if (timer) clearTimeout(timer);
     };
   }, [isAdmin]);
 
@@ -188,7 +206,7 @@ const AdminLiveMonitor = () => {
               المراقبة اللحظية
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              تحديث كل {REFRESH_MS / 1000}ث · آخر تحديث:{" "}
+              تحديث كل {refreshMs / 1000}ث · آخر تحديث:{" "}
               {lastUpdate ? lastUpdate.toLocaleTimeString("ar-EG") : "—"}
             </p>
           </div>
