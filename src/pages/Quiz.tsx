@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { SiteNav } from "@/components/site/SiteNav";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import { saveAnswer, flushQueue, getQueueSize } from "@/lib/answerQueue";
 
 type Question = {
   id: string;
