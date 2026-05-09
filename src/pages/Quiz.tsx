@@ -86,7 +86,7 @@ const Quiz = () => {
   };
 
   const submitAnswer = async () => {
-    if (!selected || !currentQ || !user) return;
+    if (!selected || !currentQ || !user || answered) return; // منع الضغط المزدوج
     const isCorrect = selected === currentQ.correct_option;
     const earned = isCorrect ? currentQ.points : 0;
     setAnswered(true);
@@ -96,14 +96,21 @@ const Quiz = () => {
       confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
     }
 
-    const { error } = await supabase.from("quiz_attempts").insert({
+    // حفظ آمن مع retry + offline queue
+    const result = await saveAnswer({
       student_id: user.id,
       question_id: currentQ.id,
       selected_option: selected,
       is_correct: isCorrect,
       points_earned: earned,
     });
-    if (error) toast.error("تعذّر حفظ الإجابة");
+
+    if (result.queued && !result.saved) {
+      const remaining = getQueueSize();
+      toast.warning("إجابتك محفوظة محلياً", {
+        description: `جارٍ المحاولة مجدداً... (${remaining} إجابة في الانتظار)`,
+      });
+    }
   };
 
   const next = () => { setCurrentQ(null); setSelected(null); setAnswered(false); };
