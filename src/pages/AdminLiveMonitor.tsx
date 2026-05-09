@@ -55,70 +55,45 @@ const AdminLiveMonitor = () => {
     if (!isAdmin) return;
     let cancelled = false;
 
-    const load = async () => {
+    const load = async (): Promise<boolean> => {
       const now = new Date();
       const oneMinAgo = new Date(now.getTime() - 60 * 1000).toISOString();
       const fiveMinAgo = new Date(now.getTime() - 5 * 60 * 1000).toISOString();
       const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
 
       try {
-        // عدّ فقط (head:true) للحقول الكبيرة → بايتات قليلة بدل آلاف الصفوف
         const [m1, h1Total, h1Correct, m5Ids, recentRes] = await Promise.all([
-          supabase
-            .from("quiz_attempts")
-            .select("id", { count: "exact", head: true })
-            .gte("attempted_at", oneMinAgo),
-          supabase
-            .from("quiz_attempts")
-            .select("id", { count: "exact", head: true })
-            .gte("attempted_at", oneHourAgo),
-          supabase
-            .from("quiz_attempts")
-            .select("id", { count: "exact", head: true })
-            .eq("is_correct", true)
-            .gte("attempted_at", oneHourAgo),
-          // student_id فقط لحساب الطالبات النشطات (عمود واحد صغير)
-          supabase
-            .from("quiz_attempts")
-            .select("student_id")
-            .gte("attempted_at", fiveMinAgo)
-            .limit(2000),
-          supabase
-            .from("quiz_attempts")
-            .select("id, student_id, is_correct, points_earned, attempted_at")
-            .order("attempted_at", { ascending: false })
-            .limit(RECENT_LIMIT),
+          supabase.from("quiz_attempts").select("id", { count: "exact", head: true }).gte("attempted_at", oneMinAgo),
+          supabase.from("quiz_attempts").select("id", { count: "exact", head: true }).gte("attempted_at", oneHourAgo),
+          supabase.from("quiz_attempts").select("id", { count: "exact", head: true }).eq("is_correct", true).gte("attempted_at", oneHourAgo),
+          supabase.from("quiz_attempts").select("student_id").gte("attempted_at", fiveMinAgo).limit(2000),
+          supabase.from("quiz_attempts").select("id, student_id, is_correct, points_earned, attempted_at").order("attempted_at", { ascending: false }).limit(RECENT_LIMIT),
         ]);
 
-        if (cancelled) return;
+        if (cancelled) return true;
+
+        // اعتبار أي خطأ في أحد الاستعلامات فشلاً يستوجب backoff
+        const firstErr = [m1, h1Total, h1Correct, m5Ids, recentRes].find((r) => r.error)?.error;
+        if (firstErr) throw new Error(firstErr.message);
 
         const m5Data = m5Ids.data ?? [];
         const activeIds = new Set(m5Data.map((a: any) => a.student_id));
         const totalH1 = h1Total.count ?? 0;
         const correctH1 = h1Correct.count ?? 0;
 
-        const newStats: Stats = {
+        setStats({
           attemptsLastMinute: m1.count ?? 0,
           attemptsLast5Min: m5Data.length,
           attemptsLastHour: totalH1,
           activeStudents: activeIds.size,
           correctRate: totalH1 > 0 ? Math.round((correctH1 / totalH1) * 100) : 0,
-          avgPointsPerAttempt: 0, // أُزيل لتقليل الـ bandwidth (كان يحمّل كل صفوف الساعة)
-        };
+          avgPointsPerAttempt: 0,
+        });
 
-        setStats(newStats);
-
-        // أسماء الطالبات للسجل الأخير
-        const recentList = (recentRes.data ?? []).map((r: any) => ({
-          ...r,
-          question_id: "",
-        })) as RecentAttempt[];
+        const recentList = (recentRes.data ?? []).map((r: any) => ({ ...r, question_id: "" })) as RecentAttempt[];
         const ids = Array.from(new Set(recentList.map((r) => r.student_id)));
         if (ids.length > 0) {
-          const { data: profs } = await supabase
-            .from("profiles")
-            .select("id, full_name")
-            .in("id", ids);
+          const { data: profs } = await supabase.from("profiles").select("id, full_name").in("id", ids);
           const nameMap = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
           recentList.forEach((r) => {
             r.student_name = nameMap.get(r.student_id) ?? "—";
@@ -128,21 +103,37 @@ const AdminLiveMonitor = () => {
 
         setLastUpdate(new Date());
         setError(null);
+        return true;
       } catch (e: any) {
         if (!cancelled) setError(e?.message ?? "تعذّر تحميل البيانات");
+        return false;
       }
     };
 
     let timer: ReturnType<typeof setTimeout> | null = null;
+    let backoffStep = 0; // 0 = لا أخطاء، يتضاعف عند الفشل
+    const MAX_BACKOFF_MS = 5 * 60 * 1000; // سقف 5 دقائق
+
     const tick = async () => {
-      await load();
+      const ok = await load();
       if (cancelled) return;
-      // اختيار الفترة بناءً على عدد الطالبات النشطات (يتحدث داخل load عبر setStats)
-      // نقرأ من state الحالي عبر functional update لاحقاً، هنا نستعمل حيلة عبر setStats
+
+      if (!ok) {
+        // exponential backoff: 30s, 60s, 120s, 240s, 300s (سقف)
+        backoffStep = Math.min(backoffStep + 1, 5);
+        const delay = Math.min(30000 * Math.pow(2, backoffStep - 1), MAX_BACKOFF_MS);
+        // إضافة jitter ±15% لتجنّب thundering herd
+        const jitter = delay * (0.85 + Math.random() * 0.3);
+        setRefreshMs(Math.round(jitter));
+        timer = setTimeout(tick, jitter);
+        return;
+      }
+
+      // نجاح: إعادة تعيين backoff واختيار فترة تكيّفية
+      backoffStep = 0;
       setStats((s) => {
         const active = s?.activeStudents ?? 0;
-        const next =
-          active === 0 ? REFRESH_IDLE_MS : active < 10 ? REFRESH_LOW_MS : REFRESH_ACTIVE_MS;
+        const next = active === 0 ? REFRESH_IDLE_MS : active < 10 ? REFRESH_LOW_MS : REFRESH_ACTIVE_MS;
         setRefreshMs(next);
         timer = setTimeout(tick, next);
         return s;
