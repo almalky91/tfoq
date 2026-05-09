@@ -206,7 +206,7 @@ const AdminLiveMonitor = () => {
               المراقبة اللحظية
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              تحديث كل {REFRESH_MS / 1000}ث · آخر تحديث:{" "}
+              تحديث كل {refreshMs / 1000}ث · آخر تحديث:{" "}
               {lastUpdate ? lastUpdate.toLocaleTimeString("ar-EG") : "—"}
             </p>
           </div>
