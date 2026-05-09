@@ -25,7 +25,8 @@ type Stats = {
   avgPointsPerAttempt: number;
 };
 
-const REFRESH_MS = 5000; // تحديث كل 5 ثوان
+const REFRESH_MS = 15000; // تحديث كل 15 ثانية (تقليل bandwidth بـ 66%)
+const RECENT_LIMIT = 10;
 
 const HEALTH_THRESHOLDS = {
   attemptsPerMinute: { warn: 200, danger: 500 },
@@ -57,47 +58,57 @@ const AdminLiveMonitor = () => {
       const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
 
       try {
-        const [m1, m5, h1, recentRes] = await Promise.all([
+        // عدّ فقط (head:true) للحقول الكبيرة → بايتات قليلة بدل آلاف الصفوف
+        const [m1, h1Total, h1Correct, m5Ids, recentRes] = await Promise.all([
           supabase
             .from("quiz_attempts")
             .select("id", { count: "exact", head: true })
             .gte("attempted_at", oneMinAgo),
           supabase
             .from("quiz_attempts")
-            .select("student_id, is_correct, points_earned")
-            .gte("attempted_at", fiveMinAgo),
-          supabase
-            .from("quiz_attempts")
-            .select("is_correct, points_earned")
+            .select("id", { count: "exact", head: true })
             .gte("attempted_at", oneHourAgo),
           supabase
             .from("quiz_attempts")
-            .select("id, student_id, question_id, is_correct, points_earned, attempted_at")
+            .select("id", { count: "exact", head: true })
+            .eq("is_correct", true)
+            .gte("attempted_at", oneHourAgo),
+          // student_id فقط لحساب الطالبات النشطات (عمود واحد صغير)
+          supabase
+            .from("quiz_attempts")
+            .select("student_id")
+            .gte("attempted_at", fiveMinAgo)
+            .limit(2000),
+          supabase
+            .from("quiz_attempts")
+            .select("id, student_id, is_correct, points_earned, attempted_at")
             .order("attempted_at", { ascending: false })
-            .limit(20),
+            .limit(RECENT_LIMIT),
         ]);
 
         if (cancelled) return;
 
-        const m5Data = m5.data ?? [];
-        const h1Data = h1.data ?? [];
+        const m5Data = m5Ids.data ?? [];
         const activeIds = new Set(m5Data.map((a: any) => a.student_id));
-        const correctH1 = h1Data.filter((a: any) => a.is_correct).length;
-        const totalPointsH1 = h1Data.reduce((s: number, a: any) => s + (a.points_earned || 0), 0);
+        const totalH1 = h1Total.count ?? 0;
+        const correctH1 = h1Correct.count ?? 0;
 
         const newStats: Stats = {
           attemptsLastMinute: m1.count ?? 0,
           attemptsLast5Min: m5Data.length,
-          attemptsLastHour: h1Data.length,
+          attemptsLastHour: totalH1,
           activeStudents: activeIds.size,
-          correctRate: h1Data.length > 0 ? Math.round((correctH1 / h1Data.length) * 100) : 0,
-          avgPointsPerAttempt: h1Data.length > 0 ? +(totalPointsH1 / h1Data.length).toFixed(2) : 0,
+          correctRate: totalH1 > 0 ? Math.round((correctH1 / totalH1) * 100) : 0,
+          avgPointsPerAttempt: 0, // أُزيل لتقليل الـ bandwidth (كان يحمّل كل صفوف الساعة)
         };
 
         setStats(newStats);
 
         // أسماء الطالبات للسجل الأخير
-        const recentList = (recentRes.data ?? []) as RecentAttempt[];
+        const recentList = (recentRes.data ?? []).map((r: any) => ({
+          ...r,
+          question_id: "",
+        })) as RecentAttempt[];
         const ids = Array.from(new Set(recentList.map((r) => r.student_id)));
         if (ids.length > 0) {
           const { data: profs } = await supabase
@@ -209,7 +220,7 @@ const AdminLiveMonitor = () => {
         </div>
 
         {/* بطاقات الإحصاءات */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           <StatCard
             icon={<Zap className="w-5 h-5" />}
             label="إجابات/دقيقة"
@@ -240,19 +251,13 @@ const AdminLiveMonitor = () => {
             value={stats ? `${stats.correctRate}%` : "—"}
             tone="success"
           />
-          <StatCard
-            icon={<TrendingUp className="w-5 h-5" />}
-            label="متوسط النقاط"
-            value={stats?.avgPointsPerAttempt ?? "—"}
-            tone="warn"
-          />
         </div>
 
         {/* آخر الإجابات */}
         <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
           <div className="px-5 py-3 border-b border-border bg-secondary/30 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary" />
-            <span className="font-bold text-sm">آخر 20 إجابة</span>
+            <span className="font-bold text-sm">آخر {RECENT_LIMIT} إجابات</span>
           </div>
           {recent.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground text-sm">لا توجد إجابات حديثة</div>
@@ -290,8 +295,9 @@ const AdminLiveMonitor = () => {
         <div className="text-xs text-muted-foreground bg-card border border-border rounded-2xl p-4">
           <p className="font-bold mb-1">💡 ملاحظات:</p>
           <ul className="list-disc pr-5 space-y-1">
-            <li>الإحصاءات تعتمد على جدول الإجابات (quiz_attempts) وتُحدَّث كل 5 ثوان.</li>
-            <li>"طالبات نشطات" = طالبات أرسلن إجابة واحدة على الأقل في آخر 5 دقائق.</li>
+            <li>الإحصاءات تعتمد على عدّ الصفوف فقط (count) لتقليل استهلاك الـ bandwidth.</li>
+            <li>التحديث كل 15 ثانية بدلاً من 5 لتقليل الحمل بـ 66%.</li>
+            <li>"طالبات نشطات" = طالبات أرسلن إجابة في آخر 5 دقائق.</li>
             <li>عند تجاوز 500 إجابة/دقيقة، فكّري في ترقية حجم Lovable Cloud instance.</li>
           </ul>
         </div>
