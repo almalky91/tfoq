@@ -67,9 +67,29 @@ const ParentDashboard = () => {
 
   const load = async () => {
     if (!user) return;
-    const { data: links } = await supabase.from("parent_student_links")
-      .select("student_id, profiles:student_id(*)").eq("parent_id", user.id);
-    const kids: Child[] = (links ?? []).map((l: any) => l.profiles).filter(Boolean);
+    const { data: links, error: linksErr } = await supabase
+      .from("parent_student_links")
+      .select("student_id")
+      .eq("parent_id", user.id);
+    if (linksErr) {
+      console.error("parent links error", linksErr);
+      toast.error("تعذّر تحميل قائمة الطالبات", { description: linksErr.message });
+      return;
+    }
+    const ids = (links ?? []).map((l) => l.student_id);
+    if (ids.length === 0) { setChildren([]); return; }
+
+    const { data: profiles, error: profErr } = await supabase
+      .from("profiles")
+      .select("id, full_name, grade, total_points")
+      .in("id", ids);
+    if (profErr) {
+      console.error("profiles fetch error", profErr);
+      toast.error("تعذّر تحميل بيانات الطالبات", { description: profErr.message });
+      return;
+    }
+
+    const kids: Child[] = (profiles ?? []) as Child[];
     for (const k of kids) {
       k._stats = await loadStatsFor(k.id);
     }
