@@ -1,4 +1,5 @@
-import { LayoutDashboard, BarChart3, BookOpenCheck, Users, GraduationCap, UserCog, Settings, LogOut, UsersRound, FileEdit } from "lucide-react";
+import { LayoutDashboard, BarChart3, BookOpenCheck, Users, GraduationCap, UserCog, Settings, LogOut, UsersRound, FileEdit, Activity } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -60,6 +61,14 @@ const SidebarInner = ({ active, onChange }: SidebarProps) => {
             </button>
           );
         })}
+        <Link
+          to="/admin/live-monitor"
+          className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all"
+        >
+          <Activity className="w-5 h-5 shrink-0 text-success" />
+          <span>المراقبة اللحظية</span>
+          <span className="ml-auto text-[10px] bg-success/20 text-success px-2 py-0.5 rounded-full font-bold">LIVE</span>
+        </Link>
       </nav>
 
       <div className="p-4 border-t border-sidebar-border space-y-1">
