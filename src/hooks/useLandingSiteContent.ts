@@ -15,7 +15,7 @@ export const useLandingSiteContent = <H = any, F = any, A = any>(
   useEffect(() => {
     let mounted = true;
 
-    const merge = (dbContent: any, fallback: T): T => {
+    const merge = <T,>(dbContent: any, fallback: T): T => {
       if (!dbContent || typeof dbContent !== "object") return fallback;
       const merged: any = { ...(fallback as any) };
       Object.entries(dbContent).forEach(([k, v]) => {
@@ -24,6 +24,7 @@ export const useLandingSiteContent = <H = any, F = any, A = any>(
       });
       return merged as T;
     };
+
 
     const run = async () => {
       try {
