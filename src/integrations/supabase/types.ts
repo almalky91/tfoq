@@ -47,6 +47,39 @@ export type Database = {
         }
         Relationships: []
       }
+      faq_entries: {
+        Row: {
+          answer: string
+          created_at: string
+          id: string
+          is_active: boolean
+          keywords: string[]
+          question: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          keywords?: string[]
+          question: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          keywords?: string[]
+          question?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       learning_game_items: {
         Row: {
           back_text: string | null
@@ -589,7 +622,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      quiz_template_questions_safe: {
+        Row: {
+          created_at: string | null
+          explanation: string | null
+          id: string | null
+          option_a: string | null
+          option_b: string | null
+          option_c: string | null
+          option_d: string | null
+          points: number | null
+          position: number | null
+          question_text: string | null
+          template_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_template_questions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       can_access_content: {
@@ -600,6 +656,10 @@ export type Database = {
           _visibility: Database["public"]["Enums"]["content_visibility"]
         }
         Returns: boolean
+      }
+      check_template_answer: {
+        Args: { p_question_id: string }
+        Returns: string
       }
       get_leaderboard: {
         Args: { _limit?: number }

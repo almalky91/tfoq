@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789907987645,
+      "tag": "0000_restore_safe_view_answer_rpc_and_faq",
+      "breakpoints": true
+    }
+  ]
+}
