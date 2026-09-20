@@ -349,6 +349,7 @@ export type Database = {
       quiz_attempts: {
         Row: {
           attempted_at: string
+          client_id: string | null
           id: string
           is_correct: boolean
           points_earned: number
@@ -358,6 +359,7 @@ export type Database = {
         }
         Insert: {
           attempted_at?: string
+          client_id?: string | null
           id?: string
           is_correct: boolean
           points_earned?: number
@@ -367,6 +369,7 @@ export type Database = {
         }
         Update: {
           attempted_at?: string
+          client_id?: string | null
           id?: string
           is_correct?: boolean
           points_earned?: number
@@ -380,6 +383,13 @@ export type Database = {
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -622,6 +632,62 @@ export type Database = {
       }
     }
     Views: {
+      questions_safe: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          difficulty: Database["public"]["Enums"]["difficulty_level"] | null
+          explanation: string | null
+          id: string | null
+          option_a: string | null
+          option_b: string | null
+          option_c: string | null
+          option_d: string | null
+          points: number | null
+          question_text: string | null
+          subject_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
+          explanation?: string | null
+          id?: string | null
+          option_a?: string | null
+          option_b?: string | null
+          option_c?: string | null
+          option_d?: string | null
+          points?: number | null
+          question_text?: string | null
+          subject_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
+          explanation?: string | null
+          id?: string | null
+          option_a?: string | null
+          option_b?: string | null
+          option_c?: string | null
+          option_d?: string | null
+          points?: number | null
+          question_text?: string | null
+          subject_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quiz_template_questions_safe: {
         Row: {
           created_at: string | null
@@ -694,6 +760,15 @@ export type Database = {
           reason: string
           remaining: number
           retry_after_seconds: number
+        }[]
+      }
+      submit_quiz_attempt: {
+        Args: { p_client_id: string; p_question_id: string; p_selected: string }
+        Returns: {
+          attempt_id: string
+          correct_option: string
+          is_correct: boolean
+          points_earned: number
         }[]
       }
       teacher_has_subject: {

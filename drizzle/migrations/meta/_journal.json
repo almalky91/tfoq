@@ -8,6 +8,13 @@
       "when": 1789907987645,
       "tag": "0000_restore_safe_view_answer_rpc_and_faq",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789908039854,
+      "tag": "0001_restore_questions_safe_and_submit_rpc",
+      "breakpoints": true
     }
   ]
 }
