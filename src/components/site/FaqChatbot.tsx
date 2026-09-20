@@ -320,13 +320,15 @@ export const FaqChatbot = ({ mode = "public" }: FaqChatbotProps) => {
         return;
       }
 
-      if (assist && !assist.ok) {
-        if (assist.message) {
-          pushBot({ role: "bot", text: assist.message });
+      if (assist && assist.ok === false) {
+        const failed = assist as Extract<AssistResponse, { ok: false }>;
+        if (failed.message) {
+          pushBot({ role: "bot", text: failed.message });
           followUp();
           return;
         }
       }
+
 
       pushBot(nomatchFallback(topic, isGuest));
       followUp();
